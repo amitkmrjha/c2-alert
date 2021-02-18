@@ -1,0 +1,31 @@
+// These are the messages that get persisted - the events, plus the current state (Cart) for snapshots.
+syntax = "proto3";
+
+package com.hackathon.hostip.persistence;
+
+option go_package = "persistence";
+
+message IpEventState {
+    int64 count = 1;
+    repeated int64 good_ips = 2;
+    repeated int64 bad_ips = 3;
+}
+
+// The item added event.
+message GoodIpAdded {
+    int64 ip = 1;
+}
+message BadIpAdded {
+    int64 ip = 1;
+}
+
+// The item removed event.
+message HostArchived {
+}
+
+message StateInfo {
+    string app_sha256 = 1 ;
+    int64 count = 2;
+    repeated int64 good_ips = 3;
+    repeated int64 bad_ips = 4;
+}

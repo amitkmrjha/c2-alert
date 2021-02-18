@@ -1,0 +1,56 @@
+// This is the public API offered by the shopping cart entity.
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "cloudstate/entity_key.proto";
+import "cloudstate/eventing.proto";
+import "google/api/annotations.proto";
+
+package com.hackathon.hostip;
+
+option go_package = "tck/hostip";
+
+message IpEvent {
+     string app_sha256 = 1 [(.cloudstate.entity_key) = true];
+     int64 ip = 2;
+}
+
+message RemoveHostEvent {
+    string app_sha256 = 1 [(.cloudstate.entity_key) = true];
+}
+
+message GetHostEvent {
+    string app_sha256 = 1 [(.cloudstate.entity_key) = true];
+}
+
+message HostIpInfo {
+    // A unique SHA256 hash of an app, used as a unique ID for the app
+    string app_sha256 = 1 ;
+    int64 count = 2;
+    repeated int64 good_ips = 3;
+    repeated int64 bad_ips = 4;
+}
+
+service HostIp {
+    rpc AddHostIp(IpEvent) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            post: "/com.hackathon.hostip.IpEvent/hostip/{app_sha256}/ip/add",
+            body: "*",
+        };
+        option (.cloudstate.eventing).in = "ip";
+    }
+
+    rpc RemoveHostIp(RemoveHostEvent) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            post: "/com.hackathon.hostip.IpEvent/hostip/{app_sha256}/ip/remove",
+            body: "*",
+        };
+        option (.cloudstate.eventing).in = "ip";
+    }
+
+    rpc GetHostIp(GetHostEvent) returns (HostIpInfo) {
+        option (google.api.http) = {
+          get: "/com.hackathon.hostip.IpEvent/hostip/{app_sha256}"
+        };
+    }
+}
