@@ -47,11 +47,11 @@ jib {
     tags = [version]
   }
   container {
-    mainClass = "io.cloudstate.hackathon.hostip.Main"
+    mainClass = "io.cloudstate.hackathon.Main"
     ports = ["8080"]
   }
 }
 
 application {
-  mainClass = 'io.cloudstate.hackathon.hostip.Main'
+  mainClass = 'io.cloudstate.hackathon.Main'
 }

@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "cloudstate/entity_key.proto";
+import "cloudstate/eventing.proto";
+import "google/api/annotations.proto";
+
+package com.hackathon.hotip;
+
+option go_package = "tck/hotip";
+
+message HotIpEvent {
+  string ip = 1 [(.cloudstate.entity_key) = true];
+  string app_sha256 = 2;
+}
+
+message GetHotIpEvent {
+  string ip = 1 [(.cloudstate.entity_key) = true];
+}
+
+
+message HotIpInfo {
+  string ip = 1 [(.cloudstate.entity_key) = true];
+  int64 count = 2 ;
+  map<string, int64> appFrequency  = 3 ;
+}
+
+message AppCount {
+  string app_sha256 = 1;
+  int64 count = 2;
+}
+
+
+service HotIp {
+
+  rpc AddHotIp(HotIpEvent) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/com.hackathon.hotip.HotIp/hotip/{ip}/ip/add",
+      body: "*",
+    };
+    option (.cloudstate.eventing).in = "ip";
+  }
+
+  rpc GetHotIp(GetHotIpEvent) returns (HotIpInfo) {
+    option (google.api.http) = {
+      get: "/com.hackathon.hotip.HotIp/hotip/{ip}"
+    };
+  }
+}
+
+

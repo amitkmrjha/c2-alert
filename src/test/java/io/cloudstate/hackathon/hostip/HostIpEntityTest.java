@@ -17,7 +17,7 @@ public class HostIpEntityTest {
     String room = "person-cave";
 
     @Test
-    public void createShoppingCartTest() {
+    public void createHostIpTest() {
 
         CommandContext context = Mockito.mock(CommandContext.class);
         String hostIpId = "customerId1";

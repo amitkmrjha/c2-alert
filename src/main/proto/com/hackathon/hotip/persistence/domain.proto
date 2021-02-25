@@ -1,0 +1,16 @@
+// These are the messages that get persisted - the events, plus the current state (Cart) for snapshots.
+syntax = "proto3";
+
+package com.hackathon.hotip.persistence;
+
+option go_package = "persistence";
+
+message HotIpState {
+  int64 count = 1;
+  map<string, int64> appFrequency = 2;
+}
+
+message HotIpAddedEvent {
+  string ip = 1;
+  string app_sha256 = 2 ;
+}
