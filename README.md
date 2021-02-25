@@ -17,11 +17,11 @@ Step 1 : First we need to start side car(proxy) service . Run below command
 ````
 Step 2 : Download the latest version of docker image from docker hub.We pushed the image while performing `build jib` previously.
 ````
-> docker pull amitjha12/c2-alert   
+> docker pull <docker-username>/c2-alert   
 ````
 Step 3 : Run c2-alert hostip service.
 ````
-> docker run -it --rm --name c2-alert -p 8080:8080 -v `pwd`/logs:/var/log amitjha12/c2-alert:latest  
+> docker run -it --rm --name c2-alert -p 8080:8080 -v `pwd`/logs:/var/log <docker-username>/c2-alert:latest  
 ````
 
 #### Deploy to akka serverless
@@ -29,7 +29,7 @@ Step 3 : Run c2-alert hostip service.
  
 Step 1. Deploy
 ````
-> akkasls svc deploy amit-c2-alert amitjha12/c2-alert:latest
+> akkasls svc deploy amit-c2-alert <docker-username>/c2-alert:latest
 
 
 Service 'amit-c2-alert' was successfully deployed.
@@ -48,7 +48,7 @@ Step 3. Expose the amit-c2-alert Service
 > akkasls svc expose amit-c2-alert --enable-cors
 
 
-Service 'amit-c2-alert' was successfully exposed at: solitary-morning-5370.us-east1.apps.akkaserverless.com
+Service 'amit-c2-alert' was successfully exposed at: <service-url>.apps.akkaserverless.com
 Note: the expose command is only required after the first deployment of the service. Subsequent deployments will reuse the same configuration.
 ````
 Step 4. If at some point you forget or misplace your service's URL, you may obtain it using the Akka Serverless command line interface:
@@ -59,12 +59,12 @@ Step 4. If at some point you forget or misplace your service's URL, you may obta
 
 Step 5. Test Post Request . Add host ip.
 ````
-> grpcurl -d '{"app_sha256":"entityid1","ip":12346}' solitary-morning-5370.us-east1.apps.akkaserverless.com:443 com.hackathon.hostip.HostIp/AddHostIp
+> grpcurl -d '{"app_sha256":"entityid1","ip":12346}' <service-url>.apps.akkaserverless.com:443 com.hackathon.hostip.HostIp/AddHostIp
 
 ````
 Http request can also be used to create a post on Host ip entity
 ````
-> curl --location --request POST 'https://solitary-morning-5370.us-east1.apps.akkaserverless.com/com.hackathon.hostip.IpEvent/hostip/entityid1/ip/add' \
+> curl --location --request POST 'https://<service-url>.apps.akkaserverless.com/com.hackathon.hostip.IpEvent/hostip/entityid1/ip/add' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "app_sha256":"entityid1",
@@ -75,11 +75,11 @@ Http request can also be used to create a post on Host ip entity
 ````
 Step 6. Query host ip
 ````
-> grpcurl -d '{"app_sha256":"entityid1"}' solitary-morning-5370.us-east1.apps.akkaserverless.com:443 com.hackathon.hostip.HostIp/GetHostIp
+> grpcurl -d '{"app_sha256":"entityid1"}' <service-url>.apps.akkaserverless.com:443 com.hackathon.hostip.HostIp/GetHostIp
 
 ````
 Http request can also be used to create a Get on Host ip entity
 ````
-> curl --location --request GET 'https://solitary-morning-5370.us-east1.apps.akkaserverless.com/com.hackathon.hostip.IpEvent/hostip/entityid1'
+> curl --location --request GET 'https://<service-url>.apps.akkaserverless.com/com.hackathon.hostip.IpEvent/hostip/entityid1'
 
 ````
