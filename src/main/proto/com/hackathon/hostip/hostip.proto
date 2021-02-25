@@ -8,6 +8,7 @@ import "google/api/annotations.proto";
 
 package com.hackathon.hostip;
 
+
 option go_package = "tck/hostip";
 
 message IpEvent {

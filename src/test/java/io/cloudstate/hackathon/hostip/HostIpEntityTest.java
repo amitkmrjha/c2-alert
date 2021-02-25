@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class HostIpEntityTest {
+
     String accessToken = "accessToken";
     String room = "person-cave";
 

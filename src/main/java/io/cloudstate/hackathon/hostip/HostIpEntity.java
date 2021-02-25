@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 @EventSourcedEntity
 public class HostIpEntity {
+
     private final String entityId;
 
     private  Optional<Domain.IpEventState> hostIpInfoOption = Optional.empty();
