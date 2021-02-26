@@ -32,7 +32,7 @@ message HostIpInfo {
     repeated int64 bad_ips = 4;
 }
 
-service HostIp {
+service HostIpService {
     rpc AddHostIp(IpEvent) returns (google.protobuf.Empty) {
         option (google.api.http) = {
             post: "/com.hackathon.hostip.IpEvent/hostip/{app_sha256}/ip/add",

@@ -25,6 +25,7 @@ public class HotIpEntityTest {
         Hotip.HotIpEvent ipEvent1 = randomIpEvent(hotIpId);
         Hotip.HotIpEvent ipEvent2 = randomIpEvent(hotIpId);
         Hotip.HotIpEvent ipEvent3 = randomIpEvent(hotIpId);
+
         HotIpEntity hotIp = new HotIpEntity(hotIpId);
 
         hotIp.addHotIp(ipEvent1, context);

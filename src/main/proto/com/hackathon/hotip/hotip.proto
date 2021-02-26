@@ -31,7 +31,7 @@ message AppCount {
 }
 
 
-service HotIp {
+service HotIpService {
 
   rpc AddHotIp(HotIpEvent) returns (google.protobuf.Empty) {
     option (google.api.http) = {

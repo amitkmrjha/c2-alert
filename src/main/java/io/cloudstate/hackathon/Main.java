@@ -12,11 +12,11 @@ public final class Main {
     new CloudState()
             .registerEventSourcedEntity(
                     HostIpEntity.class,
-                    Hostip.getDescriptor().findServiceByName("HostIp"),
+                    Hostip.getDescriptor().findServiceByName("HostIpService"),
                     com.hackathon.hostip.persistence.Domain.getDescriptor())
             .registerEventSourcedEntity(
                     HotIpEntity.class,
-                    Hotip.getDescriptor().findServiceByName("HotIp"),
+                    Hotip.getDescriptor().findServiceByName("HotIpService"),
                     com.hackathon.hotip.persistence.Domain.getDescriptor())
             .start()
             .toCompletableFuture()

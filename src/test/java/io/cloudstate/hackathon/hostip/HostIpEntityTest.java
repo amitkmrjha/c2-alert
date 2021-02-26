@@ -2,7 +2,10 @@ package io.cloudstate.hackathon.hostip;
 
 import com.hackathon.hostip.Hostip;
 import com.hackathon.hostip.persistence.Domain;
+import com.hackathon.hotip.Hotip;
+import io.cloudstate.javasupport.ServiceCallRef;
 import io.cloudstate.javasupport.eventsourced.CommandContext;
+import io.cloudstate.javasupport.eventsourced.EventSourcedEntityCreationContext;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 
@@ -10,6 +13,8 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
+
 
 public class HostIpEntityTest {
 
@@ -18,14 +23,24 @@ public class HostIpEntityTest {
 
     @Test
     public void createHostIpTest() {
-
         CommandContext context = Mockito.mock(CommandContext.class);
+        ServiceCallRef<Hotip.HotIpEvent> hotIpEventRef = Mockito.mock(ServiceCallRef.class);
+
         String hostIpId = "customerId1";
         Hostip.IpEvent ipEvent1 = randomIpEvent(hostIpId);
         Hostip.IpEvent ipEvent2 = randomIpEvent(hostIpId);
         Hostip.IpEvent ipEvent3 = randomIpEvent(hostIpId);
 
-        HostIpEntity hostIp = new HostIpEntity(hostIpId);
+
+
+
+//"com.hackathon.hotip.HotIpService", "AddHotIp", Hotip.HotIpEvent.class
+        context.serviceCallFactory()
+                .lookup(
+                        "com.hackathon.hotip.HotIpService", "AddHotIp", Hotip.HotIpEvent.class);
+
+        //HostIpEntity hostIp = new HostIpEntity(hostIpId);
+        HostIpEntity hostIp = new HostIpEntity(context);
 
         hostIp.addHostIp(ipEvent1, context);
         emitAddContextEvent(context,hostIp,ipEvent1);
@@ -52,8 +67,7 @@ public class HostIpEntityTest {
         Hostip.IpEvent ipEvent1 = randomIpEvent(hostIpId);
         Hostip.IpEvent ipEvent2 = randomIpEvent(hostIpId);
         Hostip.IpEvent ipEvent3 = randomIpEvent(hostIpId);
-
-        HostIpEntity hostIp = new HostIpEntity(hostIpId);
+        HostIpEntity hostIp = new HostIpEntity(context);
 
         hostIp.addHostIp(ipEvent1, context);
         emitAddContextEvent(context,hostIp,ipEvent1);
@@ -94,11 +108,11 @@ public class HostIpEntityTest {
 
     private void emitAddContextEvent(CommandContext ctx, HostIpEntity hostIp, Hostip.IpEvent ipEvent){
         if(isGoodIp(ipEvent.getIp())){
-            Domain.GoodIpAdded goodIpAdded = getGoodIpAdded(ipEvent.getIp());
+            Domain.GoodIpAdded goodIpAdded = getGoodIpAdded(ipEvent);
             Mockito.verify(ctx).emit(goodIpAdded);
             hostIp.goodIpAdded(goodIpAdded);
         }else{
-            Domain.BadIpAdded badIpAdded = getBadIpAdded(ipEvent.getIp());
+            Domain.BadIpAdded badIpAdded = getBadIpAdded(ipEvent);
             Mockito.verify(ctx).emit(badIpAdded);
             hostIp.badIpAdded(badIpAdded);
         }
@@ -116,14 +130,16 @@ public class HostIpEntityTest {
         } else return false;
     }
 
-    private Domain.GoodIpAdded getGoodIpAdded(Long ip){
+    private Domain.GoodIpAdded getGoodIpAdded(Hostip.IpEvent ipEvent){
         return Domain.GoodIpAdded.newBuilder()
-                .setIp(ip)
+                .setAppSha256(ipEvent.getAppSha256())
+                .setIp(ipEvent.getIp())
                 .build();
     }
-    private Domain.BadIpAdded getBadIpAdded(Long ip){
+    private Domain.BadIpAdded getBadIpAdded(Hostip.IpEvent ipEvent){
         return Domain.BadIpAdded.newBuilder()
-                .setIp(ip)
+                .setAppSha256(ipEvent.getAppSha256())
+                .setIp(ipEvent.getIp())
                 .build();
     }
 }
