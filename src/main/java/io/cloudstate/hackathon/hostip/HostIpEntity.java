@@ -56,7 +56,7 @@ public class HostIpEntity {
                         Hotip.HotIpEvent.newBuilder()
                                 .setIp(String.valueOf(ipEvent.getIp()))
                                 .setAppSha256(ipEvent.getAppSha256())
-                                .build()));
+                                .build()),true);
         return Empty.getDefaultInstance();
     }
 
